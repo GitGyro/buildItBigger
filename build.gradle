@@ -17,3 +17,47 @@ allprojects {
         jcenter()
     }
 }
+
+task task_A(dependsOn:[':backend:appengineRun'])
+task task_B(dependsOn:[':app:connectedDebugAndroidTest'])
+task task_C(dependsOn:[':backend:appengineStop'])
+
+
+//task_B{}.dependsOn task_A
+//task_C{}.dependsOn task_B
+
+//task runMe(dependsOn:[':backend:appengineRun',':app:connectedAndroidTest',':backend:appengineStop'])
+//appengine runs as a daemon see properties
+//task runTest(dependsOn: [':backend:appengineRun',':app:connectedDebugAndroidTest']){
+task runTest(dependsOn: [':backend:appengineRun']){
+
+doLast {
+
+    println "started the server"
+}
+}
+
+//task_B.mustRunAfter runTest
+
+runTest.finalizedBy ":backend:appengineStop"
+
+
+task task_1(dependsOn:[':backend:appengineRun'])
+task task_2(dependsOn:[':app:connectedDebugAndroidTest'])
+
+task_2.dependsOn task_1
+task_2.finalizedBy ":backend:appengineStop"
+
+task runAndroidTest{
+    dependsOn   ":app:connectedAndroidTest"
+    mustRunAfter ":backend:appengineRun"
+    finalizedBy ":backend:appengineStop"
+}
+
+gradle.buildFinished{ buildResult->
+
+    if (buildResult.failure != null){
+        println "Build Finished with Error "+" "+buildResult.failure
+    }
+
+}
