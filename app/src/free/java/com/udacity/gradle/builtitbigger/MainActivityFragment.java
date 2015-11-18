@@ -1,4 +1,6 @@
 package com.udacity.gradle.builditbigger;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import android.app.Activity;
@@ -17,8 +19,10 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.androidjokelibrary.JokeActivity;
+import com.udacity.gradle.builditbigger.Utilities;
 
 import java.lang.Override;
+import java.lang.String;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -31,7 +35,7 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
      * onCreate is not called upon rotation but onCreateView is called.
      */
     int spinner_visibility = View.GONE;
-
+    private String deviceID = AdRequest.DEVICE_ID_EMULATOR;;
     private InterstitialAd mInterstitialAd;
 
     public MainActivityFragment() {
@@ -54,6 +58,14 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
 public void onCreate(Bundle bundle){
     setRetainInstance(true);
     spinner_visibility = View.GONE;
+    if (!Build.HARDWARE.contains("goldfish")){
+        String uniqueId = Settings.Secure.getString(getActivity().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        deviceID = Utilities.xlateToDeviceID(uniqueId);
+        Log.e("MSG ","Not running emulator");
+    }
+    Log.e("DeviceId ", deviceID);
+
     super.onCreate(bundle);
 }
 
@@ -86,7 +98,7 @@ public void onCreate(Bundle bundle){
         });
 
         mInterstitialAd = new InterstitialAd(getActivity());
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id) /*"ca-app-pub-3940256099942544/6300978111"*/);
                 mInterstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdClosed() {
@@ -103,9 +115,9 @@ public void onCreate(Bundle bundle){
     //"B7ACA8BFA9381BAB320C32F403523DAC"
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("B7ACA8BFA9381BAB320C32F403523DAC"/*AdRequest.DEVICE_ID_EMULATOR*/)
+                .addTestDevice(deviceID /*"B7ACA8BFA9381BAB320C32F403523DAC"*//*AdRequest.DEVICE_ID_EMULATOR*/)
                 .build();
-        Log.e("Error",AdRequest.DEVICE_ID_EMULATOR);
+        //Log.e("Error",AdRequest.DEVICE_ID_EMULATOR);
         mInterstitialAd.loadAd(adRequest);
     }
     public void getJoke(){
@@ -114,7 +126,7 @@ public void onCreate(Bundle bundle){
 
         EndpointsAsyncTask jokeAsyncTask =  new EndpointsAsyncTask();
         jokeAsyncTask.setCallback(this);
-        jokeAsyncTask.execute(new Pair<Context, String>(getActivity(), "To GCE Server"));
+        jokeAsyncTask.execute(new Pair<Context, String>(getActivity(), "GCEServer"));
 
     }
 

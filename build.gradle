@@ -17,7 +17,17 @@ allprojects {
         jcenter()
     }
 }
+/*
+ * Test for valid async task results
+ * Starts app engine runs test and then stops the app engine
+ */
+task runAndroidTest{
+    dependsOn    ":app:connectedAndroidTest"
+    mustRunAfter ":backend:appengineRun"
+    finalizedBy  ":backend:appengineStop"
+}
 
+/*
 task task_A(dependsOn:[':backend:appengineRun'])
 task task_B(dependsOn:[':app:connectedDebugAndroidTest'])
 task task_C(dependsOn:[':backend:appengineStop'])
@@ -35,7 +45,7 @@ doLast {
 
     println "started the server"
 }
-}
+
 
 //task_B.mustRunAfter runTest
 
@@ -48,16 +58,10 @@ task task_2(dependsOn:[':app:connectedDebugAndroidTest'])
 task_2.dependsOn task_1
 task_2.finalizedBy ":backend:appengineStop"
 
-task runAndroidTest{
-    dependsOn   ":app:connectedAndroidTest"
-    mustRunAfter ":backend:appengineRun"
-    finalizedBy ":backend:appengineStop"
-}
-
 gradle.buildFinished{ buildResult->
 
     if (buildResult.failure != null){
         println "Build Finished with Error "+" "+buildResult.failure
     }
 
-}
+*/

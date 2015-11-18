@@ -35,11 +35,11 @@ public class MyEndpoint {
     public MyBean sayHi(HttpServletRequest req, @Named("name") String name) {
         MyBean response = new MyBean();
 
-        System.out.println(req.getRemoteAddr() + ":" + req.getRemotePort() + " Calling me:" + req.getLocalAddr()+":"+req.getLocalPort());
+        //System.out.println(req.getRemoteAddr() + ":" + req.getRemotePort() + " Calling me:" + req.getLocalAddr()+":"+req.getLocalPort());
         //System.out.println(req.getLocalAddr() +":"+req.getLocalPort() + " : Calling me");
         Joker jk = new Joker();
-        response.setData("Hi, " + name+"New Joke "+jk.getJoke());
-
+        response.setData(jk.getJoke());
+        //response.setData("Hi, " + name+"New Joke "+jk.getJoke());
         return response;
     }
 

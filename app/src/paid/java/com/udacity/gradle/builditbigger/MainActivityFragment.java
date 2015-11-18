@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +51,7 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
 
         spinner=(ProgressBar)root.findViewById(R.id.progressBar);
         spinner.setVisibility(spinner_visibility);
-        Log.e("<<< CALLING ME >>", "OnCreateView");
+
 
 /*
 No ads paid version
@@ -84,7 +83,7 @@ No ads paid version
         //spinner.setVisibilityView.VISIBLE);
         EndpointsAsyncTask jokeAsyncTask =  new EndpointsAsyncTask();
         jokeAsyncTask.setCallback(this);
-        jokeAsyncTask.execute(new Pair<Context, String>(getActivity(), "To GCE Server"));
+        jokeAsyncTask.execute(new Pair<Context, String>(getActivity(), "GCEServer"));
 /*
         Intent intent = new Intent(this, JokeActivity.class);
         intent.putExtra(JokeActivity.JOKE_KEY, joke);
